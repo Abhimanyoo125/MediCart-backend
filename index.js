@@ -1,7 +1,7 @@
+// import { SpeedInsights } from "@vercel/speed-insights/next" 
 const express = require('express');
 const { MongoClient, ObjectId } = require('mongodb');
 const setupSwagger = require('./swaggerSetup');
-import { SpeedInsights } from "@vercel/speed-insights/next" 
 
 const app = express();
 const port = 3000;
@@ -10,7 +10,7 @@ setupSwagger(app);
 
 // MongoDB connection URL
 const url = "mongodb+srv://abhimanyoovjoshi:Manubal1@backenddb.ecott.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB";
-<SpeedInsights/>
+{/* <SpeedInsights/> */}
 /**
  * @swagger
  * /data/query/findall/{dbname}/{collectionName}:
