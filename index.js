@@ -1,6 +1,7 @@
 const express = require('express');
 const { MongoClient, ObjectId } = require('mongodb');
 const setupSwagger = require('./swaggerSetup');
+import { SpeedInsights } from "@vercel/speed-insights/next" 
 
 const app = express();
 const port = 3000;
