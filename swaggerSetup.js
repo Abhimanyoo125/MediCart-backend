@@ -10,10 +10,10 @@ const options = {
             description: 'API documentation for MediCart API operations',
         },
         servers: [
-            // {
-            //     url: 'http://localhost:3000',
-            //     description: 'Development server',
-            //   },
+            {
+                url: 'http://localhost:3000',
+                description: 'Development server',
+              },
               {
                 url: 'https://medicart-backend.vercel.app/',  // Vercel URL
                 description: 'Production server',
