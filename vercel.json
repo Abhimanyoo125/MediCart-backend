@@ -8,8 +8,19 @@
     ],
     "routes": [
       {
+        "src": "/api/(.*)",
+        "dest": "/api/index.js"
+      },
+      {
         "src": "/(.*)",
         "dest": "/index.js"
+      }
+    ],
+    "redirects": [
+      {
+        "source": "/old-path",
+        "destination": "/new-path",
+        "permanent": true
       }
     ]
   }
