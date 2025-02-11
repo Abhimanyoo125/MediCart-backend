@@ -11,10 +11,13 @@ const options = {
         },
         servers: [
             {
-                url: 'https://medicart-backend.vercel.app/',
-                url : 'http://localhost:3000',
-
-            },
+                url: 'http://localhost:3000',
+                description: 'Development server',
+              },
+              {
+                url: 'https://medicart-backend.vercel.app/',  // Vercel URL
+                description: 'Production server',
+              }
         ],
     },
     apis: ["./index.js"], // Path to the API docs
