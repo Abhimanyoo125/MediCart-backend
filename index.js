@@ -10,7 +10,7 @@ setupSwagger(app);
 
 // MongoDB connection URL
 const url = "mongodb+srv://abhimanyoovjoshi:Manubal1@backenddb.ecott.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB";
-
+<SpeedInsights/>
 /**
  * @swagger
  * /data/query/findall/{dbname}/{collectionName}:
