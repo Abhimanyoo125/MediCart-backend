@@ -2,9 +2,11 @@
 import express from 'express';
 import { MongoClient, ObjectId } from 'mongodb';
 import setupSwagger from './swaggerSetup.js'
+import cors from 'cors';
 
 const app = express();
-const port = 3000;
+app.use(cors());
+const port = 3001;
 app.use(express.json());
 setupSwagger(app);
 

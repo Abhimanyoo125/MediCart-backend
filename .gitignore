@@ -111,3 +111,4 @@ dist/
 # Expo
 .expo
 .expo-shared
+.vercel
