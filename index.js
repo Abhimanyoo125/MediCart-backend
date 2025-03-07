@@ -13,6 +13,8 @@ setupSwagger(app);
 
 // MongoDB connection URL
 const url = "mongodb+srv://abhimanyoovjoshi:Manubal1@backenddb.ecott.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB";
+const client = new MongoClient(url);
+
 {/* <SpeedInsights/> */}
 /**
  * @swagger
