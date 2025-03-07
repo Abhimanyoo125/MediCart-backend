@@ -3,6 +3,7 @@ import express from 'express';
 import { MongoClient, ObjectId } from 'mongodb';
 import setupSwagger from './swaggerSetup.js'
 import cors from 'cors';
+const bcrypt = require("bcryptjs");
 
 const app = express();
 app.use(cors());
@@ -480,7 +481,147 @@ app.delete('/data/query/deletemany/:dbname/:collectionName', async (req, res) =>
     }
 });
 
-
+/**
+ * @swagger
+ * /data/query/auth/{dbname}/{collectionName}/signup:
+ *   post:
+ *     summary: Register a new user
+ *     description: Signup a user with email and hashed password
+ *     parameters:
+ *       - in: path
+ *         name: dbname
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The database name
+ *       - in: path
+ *         name: collectionName
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The collection name
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: User already exists
+ *       500:
+ *         description: Server error
+ */
+app.post("/data/query/auth/:dbname/:collectionName/signup", async (req, res) => {
+    const { dbname, collectionName } = req.params;
+    const { email, password } = req.body;
+  
+    try {
+      await client.connect();
+      const db = client.db(dbname);
+      const collection = db.collection(collectionName);
+  
+      const existingUser = await collection.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ error: "User already exists" });
+      }
+  
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+  
+      const newUser = { email, password: hashedPassword };
+      await collection.insertOne(newUser);
+  
+      res.status(201).json({ message: "User registered successfully" });
+    } catch (error) {
+      console.error("Signup error:", error);
+      res.status(500).json({ error: "Server error" });
+    } finally {
+      await client.close();
+    }
+  });
+  
+  /**
+   * @swagger
+   * /data/query/auth/{dbname}/{collectionName}/login:
+   *   post:
+   *     summary: Authenticate a user
+   *     description: Login with email and password
+   *     parameters:
+   *       - in: path
+   *         name: dbname
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: The database name
+   *       - in: path
+   *         name: collectionName
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: The collection name
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - email
+   *               - password
+   *             properties:
+   *               email:
+   *                 type: string
+   *               password:
+   *                 type: string
+   *     responses:
+   *       200:
+   *         description: Login successful
+   *       401:
+   *         description: Invalid credentials
+   *       500:
+   *         description: Server error
+   */
+  app.post("/data/query/auth/:dbname/:collectionName/login", async (req, res) => {
+    const { dbname, collectionName } = req.params;
+    const { email, password } = req.body;
+  
+    try {
+      await client.connect();
+      const db = client.db(dbname);
+      const collection = db.collection(collectionName);
+  
+      const user = await collection.findOne({ email });
+  
+      if (!user) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+  
+      const isMatch = await bcrypt.compare(password, user.password);
+  
+      if (!isMatch) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+  
+      res.status(200).json({ message: "Login successful", user });
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ error: "Server error" });
+    } finally {
+      await client.close();
+    }
+  });
+  
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
