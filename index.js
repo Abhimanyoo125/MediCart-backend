@@ -3,7 +3,7 @@ import express from 'express';
 import { MongoClient, ObjectId } from 'mongodb';
 import setupSwagger from './swaggerSetup.js'
 import cors from 'cors';
-const bcrypt = require("bcryptjs");
+import bcrypt from "bcryptjs";
 
 const app = express();
 app.use(cors());
@@ -621,7 +621,7 @@ app.post("/data/query/auth/:dbname/:collectionName/signup", async (req, res) => 
       await client.close();
     }
   });
-  
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
