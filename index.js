@@ -606,15 +606,22 @@ app.post("/data/query/auth/:dbname/:collectionName/signup", async (req, res) => 
       const user = await collection.findOne({ email });
   
       if (!user) {
+        console.log("User not found for email:", email);
         return res.status(401).json({ error: "Invalid credentials" });
       }
   
+      console.log("User found:", user);
+      console.log("Comparing passwords:", password, user.password);
+
       const isMatch = await bcrypt.compare(password, user.password);
   
       if (!isMatch) {
+        console.log("Password does not match");
         return res.status(401).json({ error: "Invalid credentials" });
       }
-  
+
+      console.log("Password matched. Login successful.");
+
       res.status(200).json({ message: "Login successful", user });
     } catch (error) {
       console.error("Login error:", error);
@@ -622,7 +629,8 @@ app.post("/data/query/auth/:dbname/:collectionName/signup", async (req, res) => 
     } finally {
       await client.close();
     }
-  });
+});
+
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
